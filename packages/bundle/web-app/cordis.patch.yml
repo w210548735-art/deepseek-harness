@@ -94,6 +94,11 @@
     - id: plugin-inventory
       name: '@deepseek-ai/dsh-host-plugin-inventory'
 
+    # User-defined prompt injected into every assembled system prompt; its
+    # settings page renders from the `custom-prompt` namespace below.
+    - id: custom-prompt
+      name: '@deepseek-ai/dsh-custom-prompt'
+
     # The API gateway: the transport-agnostic dispatch face every client shape
     # shares. The base layer's agent-default-model service owns the default model.
     - id: api-gateway
@@ -194,6 +199,11 @@
 
     - id: ui-settings-plugin-inventory
       name: '@deepseek-ai/dsh-client-ui-settings-plugin-inventory'
+
+    # The custom-prompt settings page: a textarea over the namespace that the
+    # host `custom-prompt` row registers.
+    - id: ui-settings-custom-prompt
+      name: '@deepseek-ai/dsh-client-ui-settings-custom-prompt'
 
     - id: ui-conversation
       name: '@deepseek-ai/dsh-client-ui-conversation'

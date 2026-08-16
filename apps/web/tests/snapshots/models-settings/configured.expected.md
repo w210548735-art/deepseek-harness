@@ -4,6 +4,9 @@
     - button "通用设置":
       - img
       - text: 通用设置
+    - button "自定义提示词":
+      - img
+      - text: 自定义提示词
     - button "模型":
       - img
       - text: 模型

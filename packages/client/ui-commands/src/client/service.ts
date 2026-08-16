@@ -12,6 +12,7 @@ import type { Context } from '@deepseek-ai/cordis'
 // Type-only: pulls the ctx.remote merge and the forwarded-event key face
 // (`commands/change` rides the allowlist) into this program.
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
+import type { Translate } from '@deepseek-ai/dsh-client-locale/client'
 import type { CommandResult } from '@deepseek-ai/dsh-commands/types'
 import type { ClientContext, ISessions, SessionId } from '@deepseek-ai/dsh-client-runtime/client'
 import type {
@@ -23,6 +24,7 @@ import type { CommandDescriptor } from './directory.ts'
 import { CommandDirectory } from './directory.ts'
 import { PopupSelectController } from './popup.ts'
 import type { TokenSegment } from './popup.ts'
+import { COMMAND_NS } from './locales.ts'
 
 declare module '@deepseek-ai/cordis' {
   interface Events {
@@ -122,6 +124,12 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
 
   private readonly directory: CommandDirectory
   private readonly live: LiveState = { contributions: new Map(), decorations: new Map(), popups: new Map() }
+  /**
+   * Bound command-namespace translate (reads the active locale per call);
+   * undefined while no locale runtime is composed, in which case host
+   * command descriptions stay the registry text.
+   */
+  private readonly translate: Translate | undefined
 
   /**
    * @param ctx - owning root context (plugin fiber; the service registers
@@ -129,6 +137,10 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
    */
   constructor(ctx: Context) {
     super(ctx, 'commandUi')
+    // The namespace-typed bind returns a key-union-narrowed TranslateNS; the
+    // lookup key here is built dynamically (`description.${name}`), so the
+    // generic Translate face is the honest type of the stored reference.
+    this.translate = ctx.get('locale')?.bind(COMMAND_NS) as Translate | undefined
     this.directory = new CommandDirectory(async (sessionId) => {
       if (this.sessions().subagentAddress(sessionId) !== undefined) return []
       const result = await ctx.remote.commands.list(sessionId)
@@ -246,7 +258,11 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
     const seen = new Set<string>()
     for (const c of list) {
       seen.add(c.name)
-      rows.push({ name: c.name, description: c.description, ...(c.input !== undefined ? { hint: c.input.hint } : {}) })
+      rows.push({
+        name: c.name,
+        description: this.localize(c.name, c.description),
+        ...(c.input !== undefined ? { hint: c.input.hint } : {}),
+      })
     }
     for (const contribution of this.live.contributions.values()) {
       if (!contribution.available(session)) continue
@@ -259,6 +275,23 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
       rows.filter(c => req.position === 'leading' || c.hint === undefined),
       req.query,
     )
+  }
+
+  /**
+   * Resolve one host command's menu description through the command
+   * namespace, keyed by command name, falling back to the registry text when
+   * the locale runtime is absent or the name has no localized entry. Reads
+   * the active locale per call, so a language switch shows on the next menu
+   * open; fuzzy matching scores the command name only, never this text.
+   * @param name - command name without the leading slash.
+   * @param host - the host-registered description (the en mirror and fallback).
+   * @returns the localized description.
+   */
+  private localize(name: string, host: string): string {
+    if (this.translate === undefined) return host
+    const key = `description.${name}`
+    const resolved = this.translate(key)
+    return resolved === key ? host : resolved
   }
 
   /** Decision table, menu column: contribution/decorated-host → popup; host input → claim; host bare → detached execute. */

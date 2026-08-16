@@ -11,11 +11,15 @@ import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
 import type { CommandResult } from '@deepseek-ai/dsh-commands/types'
 import { createScope, scopeOf } from '@deepseek-ai/dsh-client-runtime/client'
+import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
 import type { SessionId } from '@deepseek-ai/dsh-client-runtime/client'
 import type { ClientSessionContext, ConsumeTokenRequest, InputTriggerPick, InputTriggerSource } from '@deepseek-ai/dsh-client-ui-input-trigger/client'
 import type { CommandContribution, CommandDecoration, CommandUiSpec, SelectOption } from '../src/client/contract.ts'
 import type { CommandDescriptor } from '../src/client/directory.ts'
 import { CommandUiRuntime } from '../src/client/service.ts'
+// Type-only: pulls the LocaleNamespaceMap merge so the typed register overload accepts the command namespace.
+import type {} from '../src/client/index.ts'
+import { en, zh } from '../src/client/locales.ts'
 
 const sid = (k: string): SessionId => k as SessionId
 
@@ -39,6 +43,8 @@ interface BenchOptions {
   commands?: (payload: { sessionId: SessionId }) => Promise<{ commands: CommandDescriptor[] }>
   execute?: (payload: { sessionId: SessionId; line: string }) => Promise<ExecuteValue>
   addressed?: SessionId
+  /** Optional locale runtime; when provided the service localizes host command descriptions. */
+  locale?: LocaleRuntime
 }
 
 /**
@@ -121,6 +127,7 @@ async function bench(opts: BenchOptions = {}) {
     },
   })
   ctx.provide('remote.commands', commandsRemote)
+  if (opts.locale !== undefined) ctx.provide('locale', opts.locale)
   const executions: Array<{ sessionId: SessionId; name: string; result: CommandResult }> = []
   ctx.on('command/executed', (sessionId, name, result) => {
     executions.push({ sessionId, name, result })
@@ -216,6 +223,30 @@ describe('candidates', () => {
     const list = await source.candidates(proj('s1'), req('g'))
     expect(listCalls).toEqual([{ sessionId: sid('s1') }])
     expect(list).toEqual([{ name: 'goal', description: 'leadingInput kind', hint: 'goal text' }])
+  })
+
+  it('localizes host command descriptions by the active locale', async () => {
+    const locale = new LocaleRuntime(new Context())
+    locale.register('command', { zh, en })
+    locale.setLocale('zh')
+    const { source } = await bench({ locale })
+    const s1 = proj('s1')
+    const zhRows = await source.candidates(s1, req(''))
+    expect(zhRows.find(row => row.name === 'plan')?.description).toBe('进入或退出计划模式')
+    expect(zhRows.find(row => row.name === 'goal')?.description).toBe('设置或查看长期任务的当前目标')
+
+    locale.setLocale('en')
+    const enRows = await source.candidates(s1, req(''))
+    expect(enRows.find(row => row.name === 'plan')?.description).toBe('Enter or leave plan mode')
+  })
+
+  it('keeps the registry text for commands without a localized description', async () => {
+    const locale = new LocaleRuntime(new Context())
+    locale.register('command', { zh, en })
+    locale.setLocale('zh')
+    const { source } = await bench({ locale })
+    const rows = await source.candidates(proj('s2'), req(''))
+    expect(rows.find(row => row.name === 'attach')?.description).toBe('scoped shadow')
   })
 
   it('matches case-insensitive subsequences and ranks prefixes, boundaries, adjacency, gaps, then source order', async () => {
