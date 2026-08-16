@@ -61,6 +61,19 @@
   box-shadow: var(--dsw-shadow-lv3);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .menu {
+    animation: subagent-menu-in 160ms var(--ds-ease-in-out) both;
+  }
+}
+
+@keyframes subagent-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.99);
+  }
+}
+
 .node {
   position: relative;
   min-width: 0;
@@ -87,6 +100,7 @@
   text-align: left;
   cursor: pointer;
   outline: none;
+  transition: background-color 120ms var(--ds-ease-in-out);
 }
 
 .row:hover > .clickarea,
@@ -270,4 +284,12 @@
 
 .refresh:hover {
   background: var(--dsw-alias-interactive-bg-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .row {
+    animation: none;
+    transition: none;
+  }
 }

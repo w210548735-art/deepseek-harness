@@ -112,6 +112,10 @@
     background-size: 100% 100%;
     animation: none;
   }
+
+  .toBottom {
+    transition: none;
+  }
 }
 
 .hint {
@@ -185,8 +189,18 @@
   box-shadow: var(--dsw-shadow-lv2);
   cursor: pointer;
   pointer-events: auto;
+  transition:
+    border-color 160ms var(--ds-ease-in-out),
+    box-shadow 160ms var(--ds-ease-in-out),
+    transform 160ms var(--ds-ease-in-out);
 }
 
 .toBottom:hover {
   background: var(--dsw-alias-button-floating-hover);
+  border-color: color-mix(in srgb, var(--dsw-alias-state-business-primary) 45%, var(--dsw-alias-border-l2));
+  box-shadow:
+    var(--dsw-shadow-lv2),
+    0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 14%, transparent),
+    0 4px 20px color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent);
+  transform: translateY(-1px);
 }

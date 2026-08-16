@@ -12,7 +12,16 @@
   margin: 16px 0;
   color: var(--dsw-alias-label-primary);
   background: var(--dsw-alias-markdown-code-block);
+  border: 1px solid var(--dsw-alias-border-l2);
   border-radius: var(--dsl-diff-radius);
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
+}
+
+.block:hover {
+  border-color: var(--dsw-alias-border-l3);
+  box-shadow: var(--dsw-shadow-lv2);
 }
 
 /* The copy control floats in the top-right corner over the body, so the card
@@ -104,4 +113,10 @@
   padding: 0 14px 12px;
   font: var(--dsw-font-markdown-code-block);
   color: var(--dsw-alias-label-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block {
+    transition: none;
+  }
 }

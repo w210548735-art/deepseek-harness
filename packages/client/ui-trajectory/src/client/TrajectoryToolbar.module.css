@@ -39,6 +39,9 @@
   background: transparent;
   cursor: pointer;
   font: var(--dsw-font-xxs-12);
+  transition:
+    color 120ms var(--ds-ease-in-out),
+    background-color 120ms var(--ds-ease-in-out);
 }
 
 .toggle:hover {
@@ -147,6 +150,9 @@
   background: transparent;
   cursor: pointer;
   font: var(--dsw-font-xxs-12);
+  transition:
+    color 120ms var(--ds-ease-in-out),
+    background-color 120ms var(--ds-ease-in-out);
 }
 
 .action:hover {
@@ -177,6 +183,10 @@
   border-radius: 4px;
   color: var(--dsw-alias-label-caption);
   background: var(--dsw-alias-bg-layer-2);
+  transition:
+    border-color 140ms var(--ds-ease-in-out),
+    background-color 140ms var(--ds-ease-in-out),
+    box-shadow 140ms var(--ds-ease-in-out);
 }
 
 .search:hover {
@@ -186,6 +196,7 @@
 .search:focus-within {
   border-color: var(--dsw-alias-state-business-primary);
   background: var(--dsw-alias-bg-layer-1);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dsw-alias-state-business-primary) 16%, transparent);
 }
 
 .searchIcon {
@@ -211,4 +222,12 @@
   width: 12px;
   height: 12px;
   cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .action,
+  .search {
+    transition: none;
+  }
 }

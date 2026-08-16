@@ -18,10 +18,14 @@
   background: transparent;
   color: var(--dsw-alias-label-secondary);
   cursor: pointer;
+  transition:
+    background-color 140ms var(--ds-ease-in-out),
+    color 140ms var(--ds-ease-in-out);
 }
 
 .trigger:hover {
   background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
 }
 
 .track {
@@ -35,6 +39,7 @@
   stroke: var(--dsw-alias-label-tertiary);
   stroke-width: 2;
   stroke-linecap: round;
+  transition: stroke-dasharray 300ms var(--ds-ease-in-out);
 }
 
 .panel {
@@ -144,4 +149,11 @@
   margin: 0;
   font-variant-numeric: tabular-nums;
   color: var(--dsw-alias-label-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .fill {
+    transition: none;
+  }
 }

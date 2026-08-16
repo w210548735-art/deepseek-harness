@@ -7,10 +7,14 @@
   border: 1px solid var(--dsw-alias-border-l2);
   border-radius: 8px;
   background: var(--dsw-alias-bg-layer-1);
+  transition:
+    border-color 140ms var(--ds-ease-in-out),
+    box-shadow 140ms var(--ds-ease-in-out);
 }
 
 .wrap:focus-within {
   border-color: var(--dsw-alias-brand-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dsw-alias-brand-primary) 16%, transparent);
 }
 
 .icon {
@@ -35,4 +39,10 @@
 
 .input::placeholder {
   color: var(--dsw-alias-label-dimmed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    transition: none;
+  }
 }

@@ -58,12 +58,45 @@
 /* A configured provider: outlined on the panel fill, so the filled editor
    card it expands into reads as the nested object. */
 .rowCard {
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--dsw-alias-border-l2);
   border-radius: 12px;
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
+}
+
+/* MagicUI-inspired sheen: a soft diagonal highlight makes provider cards feel
+   tappable while staying quiet at rest. */
+.rowCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, var(--dsw-alias-state-business-primary) 5%, transparent) 48%,
+    transparent 61%
+  );
+  transform: translateX(-120%);
+  transition: transform 500ms var(--ds-ease-in-out);
+  pointer-events: none;
+}
+
+.rowCard:hover::before,
+.rowCard[data-open='true']::before {
+  transform: translateX(120%);
+}
+
+.rowCard:hover,
+.rowCard[data-open='true'] {
+  border-color: var(--dsw-alias-border-l3);
+  box-shadow: var(--dsw-shadow-lv2);
 }
 
 .rowHead {
@@ -559,6 +592,9 @@
   line-height: 22px;
   background: var(--dsw-alias-bg-layer-1);
   color: var(--dsw-alias-label-primary);
+  transition:
+    border-color 140ms var(--ds-ease-in-out),
+    box-shadow 140ms var(--ds-ease-in-out);
 }
 
 /* Enum pickers hold a handful of short options; a field-width dropdown reads
@@ -571,6 +607,7 @@ select.input {
 .input:focus {
   outline: none;
   border-color: var(--dsw-alias-brand-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dsw-alias-brand-primary) 16%, transparent);
 }
 
 .input::placeholder {
@@ -628,7 +665,10 @@ select.input {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .customizedSummary::before {
+  .customizedSummary::before,
+  .rowCard,
+  .rowCard::before,
+  .input {
     transition: none;
   }
 }

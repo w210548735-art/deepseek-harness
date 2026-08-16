@@ -29,6 +29,15 @@
   border: 1px solid var(--dsw-alias-border-l1);
   border-radius: 12px;
   background: var(--dsw-specific-tip);
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
+}
+
+.bar:hover,
+.bar:focus-within {
+  border-color: color-mix(in srgb, var(--dsw-alias-state-business-primary) 35%, var(--dsw-alias-border-l1));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent);
 }
 
 .goalGlyph {
@@ -124,4 +133,10 @@
 .iconBtn:disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
 }

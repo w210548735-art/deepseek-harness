@@ -12,8 +12,21 @@
   min-width: 0;
   height: 32px;
   padding: 0 8px;
-  border-radius: 8px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 10px;
   background: var(--dsw-alias-bg-module-platform);
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
+}
+
+/* A running workflow gets a soft business-blue glow so it stands out from
+   completed runs without adding a separate status banner. */
+.root[data-run-status='running'] .runHeader {
+  border-color: color-mix(in srgb, var(--dsw-alias-state-business-primary) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent),
+    0 0 24px color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent);
 }
 
 .runHeader:focus-visible {
@@ -178,6 +191,11 @@
 
 .memberButton {
   cursor: pointer;
+  transition: background-color 120ms var(--ds-ease-in-out);
+}
+
+.memberButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
 }
 
 .memberButton .memberLabel {
@@ -250,5 +268,12 @@
   .phaseList,
   .members {
     padding-left: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .runHeader,
+  .memberButton {
+    transition: none;
   }
 }

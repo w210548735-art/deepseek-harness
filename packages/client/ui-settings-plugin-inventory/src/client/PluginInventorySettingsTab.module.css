@@ -110,16 +110,46 @@
 }
 
 .card {
+  position: relative;
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--dsw-alias-border-l2);
   border-radius: 10px;
   background: var(--dsw-alias-bg-layer-3);
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
 }
 
+/* MagicUI-inspired sheen on plugin cards: a subtle diagonal light sweep makes
+   the read-only inventory feel more alive without changing its semantics. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, var(--dsw-alias-state-business-primary) 6%, transparent) 48%,
+    transparent 61%
+  );
+  transform: translateX(-120%);
+  transition: transform 500ms var(--ds-ease-in-out);
+  pointer-events: none;
+}
+
+.card:hover::before,
+.card[data-open='true']::before {
+  transform: translateX(120%);
+}
+
+.card:hover,
 .card[data-open='true'] {
-  border-color: var(--dsw-alias-border-l1);
-  box-shadow: var(--dsw-shadow-lv1);
+  border-color: var(--dsw-alias-border-l3);
+  box-shadow:
+    var(--dsw-shadow-lv1),
+    0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 12%, transparent),
+    0 4px 24px color-mix(in srgb, var(--dsw-alias-state-business-primary) 8%, transparent);
 }
 
 .cardContent {
@@ -269,6 +299,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .chevron {
     transition: transform 140ms var(--ds-ease-in-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card::before {
+    transition: none;
   }
 }
 

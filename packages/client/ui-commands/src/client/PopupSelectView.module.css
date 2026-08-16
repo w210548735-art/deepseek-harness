@@ -31,6 +31,19 @@
   outline: none;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    animation: popup-card-in 160ms var(--ds-ease-in-out) both;
+  }
+}
+
+@keyframes popup-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
+}
+
 .viewport {
   display: flex;
   flex-direction: column;
@@ -47,6 +60,7 @@
   cursor: pointer;
   font-size: 13px;
   color: var(--dsw-alias-label-primary);
+  transition: background-color 120ms var(--ds-ease-in-out);
 }
 
 .rowActive {
@@ -115,4 +129,12 @@
   font-size: 12px;
   color: var(--dsw-alias-label-primary);
   cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .row {
+    animation: none;
+    transition: none;
+  }
 }

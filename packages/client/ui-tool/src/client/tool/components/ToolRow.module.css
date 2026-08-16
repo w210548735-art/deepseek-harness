@@ -11,6 +11,28 @@
   overflow: hidden;
 }
 
+/* MagicUI-inspired glare for settled rows: a soft diagonal light follows the
+   pointer/hover state. Running rows keep their dedicated sweep instead, so the
+   two motion languages do not fight. */
+.root:not([data-state='running']) .row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, var(--dsw-alias-state-business-primary) 5%, transparent) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  transition: transform 500ms var(--ds-ease-in-out);
+  pointer-events: none;
+}
+
+.root:not([data-state='running']) .row:hover::before {
+  transform: translateX(120%);
+}
+
 /* Running sweep (deepsuite ShimmerText pattern): a fixed-width glare band —
    theme background at 60% — glides over the row content from off-left to
    off-right, washing glyphs and icon toward the background as it passes.
@@ -305,4 +327,10 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-state='running']) .row::before {
+    transition: none;
+  }
 }

@@ -22,6 +22,8 @@
 
 .sessionRow.selected {
   background: var(--dsw-alias-interactive-bg-hover);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 22%, transparent);
 }
 
 .searchResultRow {
@@ -46,6 +48,8 @@
 
 .searchResultRow.selected {
   background: var(--dsw-alias-interactive-bg-hover);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 22%, transparent);
 }
 
 .searchResultHeading {

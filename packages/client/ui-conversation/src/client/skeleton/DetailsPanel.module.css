@@ -54,6 +54,15 @@
   min-height: 0;
   padding: 12px 16px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* The body scrolls past elevated `.section` cards, so the thumb takes the
+     l2 elevation tokens. Declared here because the scrollbar belongs to this
+     container and the elevated cards inherit nothing back up to it (see
+     ui-theme styles/scrollbar.css for the rebinding contract). */
+  --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
+  --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
 }
 
 .empty {
@@ -63,12 +72,25 @@
   color: var(--dsw-alias-label-tertiary);
 }
 
+/* Details sections are card-like surfaces so Input/Output read as distinct
+   panes rather than floating labels over the panel background. */
 .section {
-  margin-bottom: 16px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--dsw-alias-bg-module-platform);
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    box-shadow 180ms var(--ds-ease-in-out);
+}
+
+.section:hover {
+  border-color: var(--dsw-alias-border-l3);
+  box-shadow: var(--dsw-shadow-lv1);
 }
 
 .sectionLabel {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 12px;
   line-height: 18px;
   font-weight: 500;
@@ -91,4 +113,10 @@
 
 .code[data-error] {
   color: var(--dsw-alias-state-error-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    transition: none;
+  }
 }

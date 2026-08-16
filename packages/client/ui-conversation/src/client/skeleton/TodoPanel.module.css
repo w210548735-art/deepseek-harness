@@ -110,6 +110,35 @@
   color: var(--dsw-alias-label-secondary);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .item {
+    animation: todo-item-in 240ms var(--ds-ease-in-out) both;
+  }
+
+  .item:nth-child(2) {
+    animation-delay: 20ms;
+  }
+
+  .item:nth-child(3) {
+    animation-delay: 40ms;
+  }
+
+  .item:nth-child(4) {
+    animation-delay: 60ms;
+  }
+
+  .item:nth-child(5) {
+    animation-delay: 80ms;
+  }
+}
+
+@keyframes todo-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
 .glyph {
   display: grid;
   flex: none;
@@ -143,4 +172,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    animation: none;
+  }
 }

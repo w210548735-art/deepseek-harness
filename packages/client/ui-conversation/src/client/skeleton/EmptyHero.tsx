@@ -115,6 +115,8 @@ export interface HeroShellProps {
 export function HeroShell({ t, children }: HeroShellProps) {
   return (
     <div className={css.root}>
+      {/* MagicUI-style ambient grid backdrop, adapted to dsh design tokens. */}
+      <div className={css.backdrop} aria-hidden="true" />
       <div className={css.stack}>
         <div className={css.headline}>
           {/* figma 34:10412: fish 34×25 leading the headline, gap 10. */}

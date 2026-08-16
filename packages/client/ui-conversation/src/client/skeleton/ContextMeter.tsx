@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { UseProjection } from '@deepseek-ai/dsh-client-runtime/client'
 // Type-only: the `contextPressure` / `contextBreakdown` projection key merges.
 import type {} from '@deepseek-ai/dsh-token-meter/client'
-import { Tooltip } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Tooltip, useAnimatedNumber } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ComposerBarProps } from '../contract/slots.ts'
 import { contextOccupancy, formatTokens } from '../chat/StatsLine.tsx'
 import css from './ContextMeter.module.css'
@@ -44,6 +44,8 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
   const rootRef = useRef<HTMLSpanElement | null>(null)
   const context = contextOccupancy(pressure)
   const available = context !== null
+  // Smoothly animate the displayed percentage and ring sweep between updates.
+  const animatedPercent = useAnimatedNumber(context?.percent ?? 0)
 
   // A model switch can temporarily remove capacity while this component stays
   // mounted. Close the now-unavailable panel instead of preserving stale UI.
@@ -71,7 +73,12 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
 
   if (context === null) return null
   const percent = context.percent
-  const reading = `${percent}%`
+  const animatedReading = Math.round(animatedPercent)
+  const reading = `${animatedReading}%`
+  // The accessible label always carries the provider-exact percent: the
+  // animated reading is a visual transition, and a screen reader or an aria
+  // capture must not observe an intermediate value.
+  const ariaReading = `${percent}%`
   const [headBefore = '', headAfter = ''] = t('context.aria', { percent: READING_SLOT })
     .split(READING_SLOT)
     .map(part => part.trim())
@@ -90,11 +97,11 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
 
   return (
     <span ref={rootRef} className={css.root}>
-      <Tooltip label={t('context.aria', { percent: reading })} side="top" delayMs={200} disabled={open}>
+      <Tooltip label={t('context.aria', { percent: ariaReading })} side="top" delayMs={200} disabled={open}>
         <button
           type="button"
           className={css.trigger}
-          aria-label={t('context.aria', { percent: reading })}
+          aria-label={t('context.aria', { percent: ariaReading })}
           aria-haspopup="dialog"
           aria-expanded={open}
           onClick={() => { setOpen(!open) }}
@@ -106,7 +113,7 @@ export function ContextMeter({ useProjection, t }: ContextMeterProps) {
               cx="7"
               cy="7"
               r={RADIUS}
-              strokeDasharray={`${CIRCUMFERENCE * percent / 100} ${CIRCUMFERENCE}`}
+              strokeDasharray={`${CIRCUMFERENCE * animatedPercent / 100} ${CIRCUMFERENCE}`}
               transform="rotate(-90 7 7)"
             />
           </svg>

@@ -172,6 +172,7 @@
 /* New Session: 38px bar, 12px radius (figma 133:7634 geometry, squared-off
    corners); collapsed it renders as the rail's plain icon control. */
 .newSession {
+  position: relative;
   flex: none;
   display: flex;
   align-items: center;
@@ -190,6 +191,30 @@
   line-height: 22px;
   cursor: pointer;
   overflow: hidden;
+  transition:
+    border-color 180ms var(--ds-ease-in-out),
+    background-color 180ms var(--ds-ease-in-out);
+}
+
+/* MagicUI-inspired sheen: a soft diagonal light sweeps across New Session on
+   hover, making the primary sidebar action feel more tactile. */
+.newSession::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in srgb, var(--dsw-alias-label-primary) 8%, transparent) 45%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 500ms var(--ds-ease-in-out);
+  pointer-events: none;
+}
+
+.newSession:hover::after {
+  transform: translateX(120%);
 }
 
 .newSession:hover {
@@ -277,7 +302,9 @@
   .railIn .iconButton,
   .railIn .newSession,
   .railIn .footArea,
-  .railIn .regionArea {
+  .railIn .regionArea,
+  .newSession,
+  .newSession::after {
     transition: none;
     animation: none;
   }

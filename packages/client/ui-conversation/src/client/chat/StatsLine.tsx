@@ -172,7 +172,10 @@ export const StatsLine = memo(function StatsLine({ useSession, useProjection, t 
   // Pipe-separated groups (figma stats strip); a group with no data drops out whole.
   const groups: string[] = []
   if (stats.steps > 0) {
-    groups.push(t('stats.counts', { turns: stats.turns, steps: stats.steps }))
+    groups.push(t('stats.counts', {
+      turns: stats.turns,
+      steps: stats.steps,
+    }))
     const durations: string[] = []
     if (stats.llmMs > 0) durations.push(t('stats.llm', { duration: formatDuration(stats.llmMs) }))
     if (stats.toolMs > 0) durations.push(t('stats.toolCall', { duration: formatDuration(stats.toolMs) }))

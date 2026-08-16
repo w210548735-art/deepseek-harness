@@ -311,7 +311,8 @@ function Loaded({ injected }: { injected: ModelsSectionInjected }): ReactNode {
             && row.apiKeyEnv !== undefined
             && row.credential?.configured === false
           return (
-            <li key={row.entry.provider} className={styles['rowCard']}>
+            <li key={row.entry.provider} className={styles['rowCard']}
+              data-open={open ? 'true' : undefined}>
               <div className={styles['rowHead']}>
                 <span className={styles['rowIdentity']}>
                   <span className={styles['rowName']}>{row.entry.displayName}</span>

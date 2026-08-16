@@ -41,6 +41,26 @@
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    animation: plan-review-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes plan-review-pulse {
+  0%,
+  100% {
+    box-shadow: var(--dsw-shadow-lv2);
+  }
+
+  50% {
+    box-shadow:
+      var(--dsw-shadow-lv2),
+      0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-warn-primary) 18%, transparent),
+      0 0 32px color-mix(in srgb, var(--dsw-alias-state-warn-primary) 12%, transparent);
+  }
+}
+
 /* Tinted full-width header band, as on the approval takeover. */
 .strip {
   display: flex;

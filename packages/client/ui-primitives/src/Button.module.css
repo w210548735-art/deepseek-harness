@@ -2,6 +2,7 @@
  * h36, pad 14/7, gap 4, r18; the wide New Session form is r24 at h38 —
  * owners with the wide form set their own radius/width). */
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -14,6 +15,7 @@
   color: var(--dsw-alias-label-primary);
   background: transparent;
   padding: 0 14px;
+  overflow: hidden;
 }
 
 .button:disabled {
@@ -38,6 +40,27 @@
 .primary {
   background: var(--dsw-alias-button-primary-fill);
   color: var(--dsw-alias-label-primary-foreground);
+}
+
+/* MagicUI-inspired sheen on primary actions: a soft light sweep on hover makes
+   the main CTA feel more tactile without changing its accessible label. */
+.primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in srgb, var(--dsw-alias-label-primary-foreground) 14%, transparent) 48%,
+    transparent 66%
+  );
+  transform: translateX(-120%);
+  transition: transform 500ms var(--ds-ease-in-out);
+  pointer-events: none;
+}
+
+.primary:hover:not(:disabled)::after {
+  transform: translateX(120%);
 }
 
 .primary:hover:not(:disabled) {
@@ -76,4 +99,11 @@
   height: 16px;
   align-items: center;
   justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .primary::after {
+    transition: none;
+  }
 }

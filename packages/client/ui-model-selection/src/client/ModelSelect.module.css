@@ -24,10 +24,14 @@
   line-height: 20px;
   font-weight: 500;
   cursor: pointer;
+  transition:
+    background-color 140ms var(--ds-ease-in-out),
+    color 140ms var(--ds-ease-in-out);
 }
 
 .trigger:hover:not(:disabled) {
   background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
 }
 
 .trigger:focus-visible {
@@ -87,6 +91,19 @@
      styles/scrollbar.css for the rebinding contract). */
   --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
   --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu {
+    animation: model-menu-in 160ms var(--ds-ease-in-out) both;
+  }
+}
+
+@keyframes model-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
 }
 
 .status,
@@ -163,6 +180,7 @@
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition: background-color 120ms var(--ds-ease-in-out);
 }
 
 .option:hover:not(:disabled),
@@ -232,6 +250,7 @@
   line-height: 22px;
   cursor: pointer;
   text-align: left;
+  transition: background-color 120ms var(--ds-ease-in-out);
 }
 
 .cell:hover {
@@ -258,4 +277,15 @@
 .cellChevron {
   flex: 0 0 auto;
   color: var(--dsw-alias-label-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .menu,
+  .option,
+  .cell,
+  .chevron {
+    animation: none;
+    transition: none;
+  }
 }
