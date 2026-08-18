@@ -120,6 +120,14 @@
         path: ':memory:'
         openAt: never
 
+    # Explicit session ids authorize read/write collaboration. The tool never
+    # performs an unbounded cross-workspace search.
+    - id: session-collaboration
+      name: '@deepseek-ai/dsh-session-collaboration'
+      config:
+        allowCrossWorkspace: true
+        waitTimeoutMs: 120000
+
     # Shared projection registry: subagent catalog identity (mode/label) folds
     # through its registered units, so the `list_agents` surface below fails
     # loud without it; web layers reuse this same mount for list rows.

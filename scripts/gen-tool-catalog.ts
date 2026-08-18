@@ -56,6 +56,8 @@ import Lsp from '@deepseek-ai/dsh-lsp'
 import * as ToolLsp from '@deepseek-ai/dsh-tool-lsp'
 import * as ToolSkill from '@deepseek-ai/dsh-tool-skill'
 import * as ToolSessionQuery from '@deepseek-ai/dsh-tool-session-query'
+import SessionCollaborationRuntime from '@deepseek-ai/dsh-session-collaboration'
+import * as ToolSessionCollaboration from '@deepseek-ai/dsh-tool-session-collaboration'
 import * as ToolTasks from '@deepseek-ai/dsh-tool-jobs'
 import * as ToolTodo from '@deepseek-ai/dsh-tool-todo'
 import * as ToolSubagent from '@deepseek-ai/dsh-tool-subagent'
@@ -420,6 +422,22 @@ const TOOL_PACKAGES: ToolPackage[] = [
       })
       await ctx.plugin(ToolSkill)
     },
+  },
+  {
+    pkg: '@deepseek-ai/dsh-tool-session-collaboration',
+    dir: 'tool-session-collaboration',
+    source: 'packages/session-query/tool-session-collaboration/src/index.ts',
+    requires: ['ctx.tools', 'ctx.systemPrompt', 'ctx.sessionCollaboration', 'a calling Agent for delivery authority'],
+    writes: ['tool/call', 'tool/result', 'session-collaboration relay events'],
+    async mount(ctx) {
+      await ctx.plugin(SessionStore)
+      await ctx.plugin(SqliteSessionQueryEngine, { path: ':memory:' })
+      await ctx.plugin(AgentRegistry)
+      await ctx.plugin(SessionCollaborationRuntime, { allowCrossWorkspace: true })
+      await ctx.plugin(ToolSessionCollaboration)
+    },
+    note:
+      'session_delegate addresses an explicit existing session id, delivers model context through next-step steering, and optionally injects the target reply into the caller. Cross-workspace delivery remains explicit-id-only and is enabled only for catalog harvesting.',
   },
   {
     pkg: '@deepseek-ai/dsh-tool-session-query',

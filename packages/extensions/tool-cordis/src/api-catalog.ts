@@ -1006,6 +1006,19 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
     ],
   },
   {
+    key: 'sessionCollaboration',
+    summary: 'Host service that owns target-agent lookup, delivery, waiting, and cleanup.',
+    description: 'Host service that owns target-agent lookup, delivery, waiting, and cleanup.',
+    methods: [
+      {
+        signature: 'async delegate(request: SessionCollaborationRequest): Promise<SessionCollaborationResult>',
+        description: 'Deliver one relay to an explicit target session and optionally inject its reply.',
+        parameters: [{ name: 'request', description: 'caller, target, content, cancellation, and wait policy.' }],
+        returns: 'delivery state, target text, and the caller-side reply relay id when awaited.',
+      },
+    ],
+  },
+  {
     key: 'sessionPersistence',
     summary: 'Durable append-only session storage.',
     description: 'Durable append-only session storage. Implementations preserve contiguous, losslessly JSON-serializable events; append resolves only after durability, and load balances a complete interrupted tail without rewriting committed events.',
@@ -3724,6 +3737,14 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   {
     name: 'SessionAvailability',
     declaration: 'export type SessionAvailability = \'live\' | \'persisted\';',
+  },
+  {
+    name: 'SessionCollaborationRequest',
+    declaration: 'export interface SessionCollaborationRequest {\n    readonly caller: Agent;\n    readonly targetSessionId: SessionId;\n    readonly content: ContentBlock[];\n    readonly signal: AbortSignal;\n    readonly wait: boolean;\n}',
+  },
+  {
+    name: 'SessionCollaborationResult',
+    declaration: 'export interface SessionCollaborationResult {\n    readonly callerSessionId: SessionId;\n    readonly targetSessionId: SessionId;\n    readonly messageId: MessageId;\n    readonly completed: boolean;\n    readonly reply?: string;\n    readonly replyMessageId?: MessageId;\n}',
   },
   {
     name: 'SessionEvent',

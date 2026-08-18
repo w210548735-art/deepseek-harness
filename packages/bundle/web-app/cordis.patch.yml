@@ -208,6 +208,10 @@
     - id: ui-conversation
       name: '@deepseek-ai/dsh-client-ui-conversation'
 
+    # Cross-session collaboration card and target-session navigation.
+    - id: ui-conversation-enhancements
+      name: '@deepseek-ai/dsh-client-ui-conversation-enhancements'
+
     # Tool call tree, generic fallback, and keyed business Tool views.
     - id: ui-tool
       name: '@deepseek-ai/dsh-client-ui-tool'

@@ -696,6 +696,29 @@ describe('MessageItem arms', () => {
     expect(view.container.querySelector('[data-context-text]')?.textContent).toBe('child report body')
   })
 
+  it('a session collaboration relay uses the cross-session sender label', () => {
+    const view = render(
+      <MessageItem t={t} node={{
+        kind: 'context',
+        seq: 3,
+        content: [{ type: 'text', text: 'collaboration message body' }],
+        source: {
+          kind: 'session-collaboration',
+          form: 'relay',
+          senderSessionId: 'caller-7',
+          targetSessionId: 'target-9',
+        },
+        provenance: { role: 'inject', label: 'session-collaboration' },
+        form: 'relay',
+      } as never}
+      />,
+    )
+    fireEvent.click(view.getByRole('button', { name: /^上下文注入\s*session-collaboration$/ }))
+    expect(view.container.querySelector('[data-context-relay-sender]')?.textContent)
+      .toBe('由另外一个会话发送')
+    expect(view.container.querySelector('[data-context-text]')?.textContent).toBe('collaboration message body')
+  })
+
   it('a recall reports how much of each source session survived the read', () => {
     // Recalled context is bounded on the way in, so hiding the omitted count
     // would overstate what the model received.

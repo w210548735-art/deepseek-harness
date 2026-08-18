@@ -239,6 +239,14 @@ const SERVICE_ROLES: ServiceRole[] = [
     note: 'The interface supplies exact reads, filters, and traces; its concrete backend adds full-text reconciliation, ranking, snippets, and cursor generations, while the model consumer owns workspace authority and cursor-free rendering.',
   },
   {
+    key: 'sessionCollaboration',
+    pkg: 'session-collaboration',
+    title: 'Bidirectional explicit session relay',
+    mode: 'core',
+    consumers: ['tool-session-collaboration'],
+    note: 'Resolves an explicit target session, steers model context into the target turn, and optionally returns the target reply to the caller without entering the ordinary FIFO queue.',
+  },
+  {
     key: 'sessionReferenceResolver',
     pkg: 'session-reference',
     title: 'Cross-session snapshot preparation',

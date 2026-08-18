@@ -444,11 +444,19 @@ export function RelayBody({ content, source, t }: {
   return (
     <>
       <p className={css.relaySender} data-context-relay-sender>
-        {t('message.context.relay.from', { session: sender })}
+        {relayKind(source) === 'session-collaboration'
+          ? t('message.context.relay.collaboration')
+          : t('message.context.relay.from', { session: sender })}
       </p>
       <ModelFacingContent content={content} t={t} />
     </>
   )
+}
+
+/** The durable relay kind, or null when the source cannot provide one. */
+function relayKind(source: unknown): string | null {
+  const kind = asRecord(source)?.['kind']
+  return typeof kind === 'string' && kind !== '' ? kind : null
 }
 
 /** The sending agent's session id, or null when the record does not name one. */
