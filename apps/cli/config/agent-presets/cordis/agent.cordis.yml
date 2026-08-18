@@ -222,6 +222,9 @@
 
 # ── remaining model-facing rows ─────────────────────────────────────────────
 
+- id: tool-session-collaboration
+  name: '@deepseek-ai/dsh-tool-session-collaboration'
+
 - id: tool-ask-user
   name: '@deepseek-ai/dsh-tool-ask-user'
 

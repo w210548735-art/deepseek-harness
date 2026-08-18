@@ -1,0 +1,37 @@
+{
+  "extends": "../../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "types": ["node"]
+  },
+  "include": [
+    "src/index.ts",
+    "src/invariant.ts",
+    "src/css-modules.d.ts",
+    "src/client/index.ts",
+    "src/client/locales.ts",
+    "src/client/cross-session/session-delegate-model.ts",
+    "src/client/cross-session/SessionDelegateCard.tsx"
+  ],
+  "references": [
+    {
+      "path": "../locale"
+    },
+    {
+      "path": "../runtime"
+    },
+    {
+      "path": "../ui-tool"
+    },
+    {
+      "path": "../ui-slots"
+    },
+    {
+      "path": "../../../vendor/cordis"
+    },
+    {
+      "path": "../../runtime-diagnostics/invariants"
+    }
+  ]
+}
